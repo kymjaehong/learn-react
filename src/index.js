@@ -1,3 +1,5 @@
+// 이 파일은 App.js 파일에서 만든 컴포넌트와 웹 브라우저 사이의 다리 역할을 합니다.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';

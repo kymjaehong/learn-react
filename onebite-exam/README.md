@@ -15,3 +15,9 @@ npm i zustand immer
 ```
 npm i react-router@7
 ```
+
+### JSON-Server
+
+```
+npm i json-server -D
+```

@@ -8,7 +8,12 @@ export function useUpdateTodoMutation() {
 
   return useMutation({
     mutationFn: updateTodo,
-    onMutate: (updatedTodo) => {
+    onMutate: async (updatedTodo) => {
+      // 해당 queryKey로 캐시 데이터를 불러오는 조회 요청이 있다면 전부 취소 처리합니다.
+      await queryClient.cancelQueries({
+        queryKey: QUERY_KEYS.todo.list,
+      });
+
       // 요청 실패를 고려해서 캐시 데이터(원본)를 변수에 담아 리턴합니다.
       const prevTodos = queryClient.getQueryData<Todo[]>(QUERY_KEYS.todo.list);
 

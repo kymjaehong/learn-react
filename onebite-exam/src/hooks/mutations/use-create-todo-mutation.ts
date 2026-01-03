@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTodo } from "@/api/create-todo";
 import { useTodosData } from "../queries/use-todos-data";
+import { QUERY_KEYS } from "@/lib/constants";
 
 export function useCreateTodoMutation() {
   const queryClient = useQueryClient();
@@ -10,12 +11,12 @@ export function useCreateTodoMutation() {
     onMutate: () => {},
     onSettled: () => {},
     onSuccess: () => {
-      //   window.location.reload(); // 안 좋은 방법
+      // window.location.reload(); // 안 좋은 방법
 
       // 좋은 방법
       // "todos" 키를 가진 캐시 데이터를 무효화
       queryClient.invalidateQueries({
-        queryKey: ["todos"],
+        queryKey: QUERY_KEYS.todo.list,
       });
     },
     onError: (error) => {

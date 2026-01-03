@@ -38,5 +38,10 @@ export function useUpdateTodoMutation() {
         );
       }
     },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.todo.list,
+      });
+    },
   });
 }

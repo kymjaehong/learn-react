@@ -21,10 +21,23 @@ export function useCreateTodoMutation() {
       // });
 
       // 최적화 방법
-      queryClient.setQueryData<Todo[]>(QUERY_KEYS.todo.list, (prevTodo) => {
-        if (!prevTodo) return [newTodo];
-        return [...prevTodo, newTodo];
-      });
+      // queryClient.setQueryData<Todo[]>(QUERY_KEYS.todo.list, (prevTodo) => {
+      //   if (!prevTodo) return [newTodo];
+      //   return [...prevTodo, newTodo];
+      // });
+
+      // 캐시 정규화 (개선)
+      queryClient.setQueryData<Todo>(
+        QUERY_KEYS.todo.detail(newTodo.id),
+        newTodo,
+      );
+      queryClient.setQueryData<string[]>(
+        QUERY_KEYS.todo.list,
+        (prevTodoIds) => {
+          if (!prevTodoIds) return [newTodo.id];
+          return [...prevTodoIds, newTodo.id];
+        },
+      );
     },
     onError: (error) => {
       window.alert(error.message);

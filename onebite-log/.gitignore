@@ -25,4 +25,4 @@ dist-ssr
 
 .env
 supabase/
-ref.json
+ref_response/

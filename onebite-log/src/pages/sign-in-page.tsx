@@ -5,13 +5,19 @@ import { useState } from "react";
 import { Link } from "react-router";
 import gitHubLogo from "@/assets/github-mark.svg";
 import { useSignInWithOAuth } from "@/hooks/mutations/use-sign-in-with-oauth";
+import { toast } from "sonner";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { mutate: signInWithPassword } = useSignInWithPassword({
-    onError: () => {
+    onError: (error) => {
+      // window.alert(error);
+      toast.error(error.message, {
+        position: "top-center",
+      });
+
       setPassword("");
     },
   });

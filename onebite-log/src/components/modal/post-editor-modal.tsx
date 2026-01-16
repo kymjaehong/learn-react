@@ -7,6 +7,7 @@ import { useCreatePost } from "@/hooks/mutations/post/use-create-post";
 import { toast } from "sonner";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { useSession } from "@/store/session";
+import { useOpenAlertModal } from "@/store/alert-modal";
 
 type Image = {
   file: File;
@@ -16,6 +17,8 @@ type Image = {
 export default function PostEditorModal() {
   const session = useSession();
   const { isOpen, close } = usePostEditorModal();
+  const openAlertModal = useOpenAlertModal();
+
   const { mutate: createPost, isPending: isCreatePostPending } = useCreatePost({
     onSuccess: () => {
       close();
@@ -34,6 +37,18 @@ export default function PostEditorModal() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCloseModal = () => {
+    if (content !== "" || images.length !== 0) {
+      openAlertModal({
+        title: "게시글 작성이 마무리 되지 않았습니다.",
+        description: "이 화면에서 나가면 작성중이던 내용이 사라집니다.",
+        onPositive: () => {
+          close();
+        },
+        // onNegative: () => {},
+      });
+
+      return;
+    }
     close();
   };
 
@@ -56,6 +71,11 @@ export default function PostEditorModal() {
           { file, previewUrl: URL.createObjectURL(file) },
         ]);
       });
+      // URL.createObjectURL(file)
+      // 내부적으로 previewUrl 생성을 위해
+      // 인자로 전달된 파일을 브라우저 메모리에 저장됩니다.
+      // 그리고 해당 파일에 접근 가능한 주소를 반환하는 방식으로 동작합니다.
+      // 따라서, 모달창을 닫거나 선택한 사진을 지울 때 URL.revokeObjectURL(image.previewUrl) 메서드를 호출해서 메모리를 비워줘야 합니다.
     }
 
     // 자유로운 파일 선택을 위한 입력값 초기화
@@ -68,6 +88,8 @@ export default function PostEditorModal() {
     setImages((prevImages) =>
       prevImages.filter((item) => item.previewUrl !== image.previewUrl),
     );
+
+    URL.revokeObjectURL(image.previewUrl);
   };
 
   // 편의기능
@@ -82,7 +104,12 @@ export default function PostEditorModal() {
 
   // 2. textarea에 포커싱
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      images.forEach((image) => {
+        URL.revokeObjectURL(image.previewUrl);
+      });
+      return;
+    }
     textareaRef.current?.focus();
 
     // 3. 모달 닫히면 작성 중이던 내용 초기화

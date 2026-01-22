@@ -26,5 +26,18 @@ export function useInfinitePostsData() {
       if (lastPage.length < PAGE_SIZE) return undefined;
       return allPages.length;
     },
+
+    // [Default]
+    // staleTime: 0,
+    // gcTime: 5 * 60 * 1000,
+
+    // [성능 이슈]
+    // staleTime이 0일 때, 무한스크롤로 가져온 모든 데이터를 리페칭할 때 부하가 발생합니다
+
+    // [해결]
+    // 무한스크롤로 가져온 데이터는 자동 리페칭을 금지한다
+    staleTime: Infinity,
+    
+    // TODO: 추가, 수정, 삭제된 최신 반영 데이터로 업데이트하기 (적절한 캐시 변형, 조작)
   });
 }

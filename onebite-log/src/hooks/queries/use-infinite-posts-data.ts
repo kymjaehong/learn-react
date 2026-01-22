@@ -37,7 +37,8 @@ export function useInfinitePostsData() {
     // [해결]
     // 무한스크롤로 가져온 데이터는 자동 리페칭을 금지한다
     staleTime: Infinity,
-    
-    // TODO: 추가, 수정, 삭제된 최신 반영 데이터로 업데이트하기 (적절한 캐시 변형, 조작)
+
+    // 추가, 수정, 삭제된 최신 반영 데이터로 업데이트하기 (적절한 캐시 변형, 조작)
+    // mutations onSuccess()에 구현
   });
 }

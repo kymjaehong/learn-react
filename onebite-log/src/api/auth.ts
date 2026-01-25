@@ -1,6 +1,18 @@
 import supabase from "@/lib/supabase";
 import type { Provider } from "@supabase/supabase-js";
 
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    // scope: "local" 지정하면, 로컬스토리지에 저장된 세션을 날립니다.
+    // 외부 통신이 실패해도 브라우저 상에서는 로그아웃 처리됩니다.
+    await supabase.auth.signOut({
+      scope: "local",
+    });
+  }
+}
+
 export async function signUp({
   email,
   password,

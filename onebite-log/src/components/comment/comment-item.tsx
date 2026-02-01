@@ -45,6 +45,7 @@ export default function CommentItem(props: NestedComment) {
 
   const isMine = session?.user.id === props.author_id;
   const isRootComment = props.parentComment === undefined;
+  const isOverTwoLevels = props.parent_comment_id !== props.root_comment_id;
 
   return (
     <div
@@ -69,7 +70,14 @@ export default function CommentItem(props: NestedComment) {
               onClose={toggleIsEditing}
             />
           ) : (
-            <div>{props.content}</div>
+            <div>
+              {isOverTwoLevels && (
+                <span className="font-bold text-blue-500">
+                  @{props.parentComment?.author.nickname}&nbsp;
+                </span>
+              )}
+              {props.content}
+            </div>
           )}
 
           <div className="text-muted-foreground flex justify-between text-sm">
@@ -110,6 +118,7 @@ export default function CommentItem(props: NestedComment) {
           type={"REPLY"}
           postId={props.post_id}
           parentCommentId={props.id}
+          rootCommentId={props.root_comment_id || props.id}
           onClose={toggleIsReply}
         />
       )}
